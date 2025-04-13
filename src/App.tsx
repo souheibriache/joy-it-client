@@ -1,9 +1,12 @@
 import "./App.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Home from "./components/Home";
+import { useEffect } from "react";
+import * as Cookies from "js-cookie";
+import { signInSuccess } from "./redux/auth/auth-slice";
 
 const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
@@ -12,6 +15,18 @@ const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
 const App = () => {
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const { currentUser } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // Read the tokens from the shared cookies
+    const accessToken = Cookies.get("accessToken");
+    const refreshToken = Cookies.get("refreshToken");
+
+    if (accessToken) {
+      dispatch(
+        signInSuccess({ accessToken, refreshToken: refreshToken || null })
+      );
+    }
+  }, [dispatch]);
 
   const isAuthenticated = Boolean(accessToken && currentUser);
 

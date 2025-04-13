@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import * as Cookies from "js-cookie";
 
 export type AuthState = {
   accessToken: string | null;
@@ -23,6 +24,7 @@ const authSlice = createSlice({
     },
     signInSuccess(
       state,
+
       action: PayloadAction<{
         accessToken: string;
         refreshToken: string | null;
@@ -32,7 +34,18 @@ const authSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       state.loading = false;
       state.error = false;
+      Cookies.set("accessToken", state.accessToken, {
+        domain: ".joy-it.fr",
+        path: "/",
+        expires: 1,
+      });
+      Cookies.set("refreshToken", state.refreshToken!, {
+        domain: ".joy-it.fr",
+        path: "/",
+        expires: 1,
+      });
     },
+
     signInFailure(state, action: PayloadAction<any>) {
       state.loading = false;
       state.error = action.payload;
