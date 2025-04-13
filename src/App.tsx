@@ -5,7 +5,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Home from "./components/Home";
 import { useEffect } from "react";
-import { get } from "js-cookie";
+import Cookies from "js-cookie";
 import { signInSuccess } from "./redux/auth/auth-slice";
 
 const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
@@ -18,8 +18,8 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     // Read the tokens from the shared cookies
-    const accessToken = get("accessToken");
-    const refreshToken = get("refreshToken");
+    const accessToken = Cookies.get("accessToken");
+    const refreshToken = Cookies.get("refreshToken");
 
     if (accessToken) {
       dispatch(

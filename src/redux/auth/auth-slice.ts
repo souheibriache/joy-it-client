@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { set } from "js-cookie";
+import Cookies from "js-cookie";
 
 export type AuthState = {
   accessToken: string | null;
@@ -34,12 +34,12 @@ const authSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       state.loading = false;
       state.error = false;
-      set("accessToken", state.accessToken, {
+      Cookies.set("accessToken", state.accessToken, {
         domain: ".joy-it.fr",
         path: "/",
         expires: 1,
       });
-      set("refreshToken", state.refreshToken!, {
+      Cookies.set("refreshToken", state.refreshToken!, {
         domain: ".joy-it.fr",
         path: "/",
         expires: 1,
